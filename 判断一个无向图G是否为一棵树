@@ -1,0 +1,83 @@
+/*
+设计算法判断一个无向图G是否为树。若是，输出“Yes！”；否则输出“No！”。
+输入格式：
+第1行是空格分隔的两个整数n和m，分别表示无向图的顶点数和边数，n<=10000,m<=100000。
+第2到m+1行，每行两个整数a和b，表示顶点a和b之间有一条边，1 < = a,b <=n 。
+键盘输入，不必检查输入错误，输入确保正确。
+输出格式：
+屏幕上显示一行，“yes！”或 “no！”.行末有回车。
+ 
+样例1
+    
+样例2
+ 
+输入：
+4 3
+1 2
+2 3
+3 1
+输出：
+No！
+    
+输入：
+2 1
+1 2
+  
+输出：
+Yes！
+*/
+ 
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+ 
+const int N=10000, M=100000;
+bool edge[N][N];   // 数组记录两点是否存在边
+bool visit[N];  // 标记该节点是否访问过
+ 
+bool DFS_check(int x, int y=-1)
+{
+    if (visit[x])
+        return false;
+ 
+    visit[x] = true;
+    int i;
+    for (i=0;i<N;i++)
+        if (edge[x][i] && i!=y)
+            if (visit[i])
+                return false;
+            else
+                if (!DFS_check(i, x))
+                    return false;
+ 
+    return true;
+}
+ 
+int main()
+{
+    int n,m;
+    scanf("%d%d",&n,&m);
+     
+    memset(edge,false,sizeof(edge));
+    int i,x,y;
+    for (i=0;i<m;i++)
+    {
+        scanf("%d%d",&x,&y);
+        edge[x-1][y-1] = true;
+        edge[y-1][x-1] = true;
+    }
+ 
+    memset(visit,false,sizeof(visit));
+    bool result = DFS_check(0);
+    if (result)
+        for (i=0;i<n;i++)
+            if (!visit[i])
+                result = false;
+    if (result)
+        printf("Yes!\n");
+    else
+        printf("No!\n");
+ 
+    system("pause");
+    return 0;
+}
